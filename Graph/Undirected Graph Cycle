@@ -1,1 +1,72 @@
+**********************************************************************************1. Solution using DFS****************************************************************************************************
 
+class Solution {
+  public:
+    // Function to detect cycle in an undirected graph.
+    bool isCycleDfs(vector<vector<int>>& adj, vector<bool> &vis , int u, int parent){
+        vis[u] = true;
+        
+        for(auto v : adj[u]){
+            if(v == parent) continue;
+            
+            if(vis[v]) return true;
+            
+            if(isCycleDfs(adj, vis, v, u))
+                return true;
+        }
+        return false;
+    }
+    bool isCycle(vector<vector<int>>& adj) {
+        // Code here
+        int V = adj.size();
+        vector<bool> vis(V, false);
+        
+        for(int u = 0; u < V; u++){
+            if(!vis[u] && isCycleDfs(adj,vis, u, -1))
+                return true;
+        }
+        return false;
+    }
+};
+
+**********************************************************************************1. Solution using BFS****************************************************************************************************
+
+class Solution {
+  public:
+    // Function to detect cycle in an undirected graph.
+    bool isCycleBfs(vector<vector<int>>& adj, vector<bool> &vis , int u){
+        
+        queue<pair<int,int>> q;
+        q.push({u, -1});
+        vis[u] = true;
+        
+        while(!q.empty()){
+            pair<int, int> p = q.front();
+            q.pop();
+            
+            int source = p.first;
+            int parent = p.second;
+            
+            for(auto & v : adj[source]){
+                if(!vis[v]){
+                    q.push({v, source});
+                    vis[v] = true;
+                }
+                else if(v != parent)
+                    return true;
+            }
+        }
+        return false;
+    }
+    bool isCycle(vector<vector<int>>& adj) {
+        // Code here
+        int V = adj.size();
+        vector<bool> vis(V, false);
+        
+        for(int u = 0; u < V; u++){
+            if(!vis[u] && isCycleBfs(adj,vis, u))
+                return true;
+        }
+        return false;
+    }
+};
