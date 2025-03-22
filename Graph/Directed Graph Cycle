@@ -32,5 +32,43 @@ class Solution {
 };
 
 ********************************* USING BFS ***********************************
-
+class Solution {
+  public:
+    // Function to detect cycle in a directed graph.
+    
+    
+    bool isCyclic(vector<vector<int>> &adj) {
+        // code here
+        int n = adj.size();
+        vector<int> indegree(n, 0);
+        
+        for(int u = 0; u < n; u++){
+            for(auto v : adj[u])
+                indegree[v]++;
+        }
+        
+        queue<int>q;
+        
+        for(int u = 0; u < n; u++){
+            if(indegree[u] == 0)
+                q.push(u);
+        }
+        
+        int count = 0;
+        
+        while(!q.empty()){
+            int s = q.front();
+            q.pop();
+            count++;
+            for(auto v : adj[s]){
+                indegree[v]--;
+                if(indegree[v] == 0)
+                    q.push(v);
+            }
+        }
+        
+        if(count == n) return false;
+        return true;
+    }
+};
 
