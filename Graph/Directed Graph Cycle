@@ -1,1 +1,36 @@
+********************************* USING DFS ***********************************
+
+class Solution {
+  public:
+    // Function to detect cycle in a directed graph.
+    bool dfs(vector<vector<int>> &adj, vector<bool> &vis, vector<bool> &inRecur, int u){
+        vis[u] = true;
+        inRecur[u] = true;
+        for(auto v : adj[u]){
+            if(vis[v] && inRecur[v])
+                return true;
+            else if(dfs(adj, vis, inRecur, v))
+                return true;
+        }
+        inRecur[u] = false;
+        return false;
+    }
+    
+    bool isCyclic(vector<vector<int>> &adj) {
+        // code here
+        int n = adj.size();
+        
+        vector<bool> vis(n, false);
+        vector<bool> inRecur(n, false);
+        
+        for(int u = 0; u < n; u++){
+            if(!vis[u] && dfs(adj, vis, inRecur, u))
+                return true;
+        }
+        return false;
+    }
+};
+
+********************************* USING BFS ***********************************
+
 
