@@ -1,3 +1,8 @@
+*************** Naive Approach **************************
+  Time Complexity : O(N^3), All test cases passed because of 
+small constraints on n 
+***************************************************************
+
 class Solution {
 public:
     int arithmeticTriplets(vector<int>& nums, int diff) {
