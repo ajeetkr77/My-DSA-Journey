@@ -42,5 +42,54 @@ public:
     }
 };
 ************************ Tabulation **********************************
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(2, vector<int>(k+1, 0)));
 
+        for(int i = n-1; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                for(int cap = 1; cap <= k; cap++){
+                    if(buy){
+                        int take = -prices[i] + dp[i+1][!buy][cap];
+                        int not_take = dp[i+1][buy][cap];
+                        dp[i][buy][cap] = max(take, not_take);
+                    }else{
+                        int sell = prices[i] + dp[i+1][!buy][cap-1];
+                        int not_sell =  dp[i+1][buy][cap];
+                        dp[i][buy][cap] = max(sell, not_sell);
+                    }
+                }
+            }
+        }
+        return dp[0][1][k];
+    }
+};
 ***********************  Tabulation + Space Optimization ************
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> after(2, vector<int>(k+1, 0));
+
+        for(int i = n-1; i >= 0; i--){
+            vector<vector<int>> curr(2, vector<int>(k+1, 0));
+            for(int buy = 0; buy <= 1; buy++){
+                for(int cap = 1; cap <= k; cap++){
+                    if(buy){
+                        int take = -prices[i] + after[!buy][cap];
+                        int not_take = after[buy][cap];
+                        curr[buy][cap] = max(take, not_take);
+                    }else{
+                        int sell = prices[i] + after[!buy][cap-1];
+                        int not_sell =  after[buy][cap];
+                        curr[buy][cap] = max(sell, not_sell);
+                    }
+                }
+            }
+            after = curr;
+        }
+        return after[1][k];
+    }
+};
