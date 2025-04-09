@@ -47,7 +47,8 @@ public:
 
 **************************** Optimized Approach ***************
 
-  T.C = O(N^2)
+  T.C = O(N^2) Using tan inverse function
+
 
 ***************************************************************
 
@@ -75,6 +76,50 @@ public:
                 auto theta = atan2(dy, dx);
 
                 mp[theta]++;
+            }
+
+            for(auto &it : mp){
+
+                maxPoints = max(maxPoints, it.second + 1);
+
+            }
+
+        }
+
+        return maxPoints;
+    }
+};
+************************************ ***************************
+
+  T . C = O(N^2) Using gcd function
+
+*********************************************************************
+class Solution {
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        int n = points.size();
+
+        int maxPoints = INT_MIN;
+
+        if(n == 1) return 1;
+
+        for(int i = 0; i < n; i++){
+
+            unordered_map<string, int> mp;
+
+            for(int j = 0; j < n; j++){
+                
+                if(i == j) continue;
+
+                auto dy = points[j][1] - points[i][1];
+
+                auto dx = points[j][0] - points[i][0];
+
+                auto gcd = __gcd(dy, dx);
+
+                string key = to_string(dx / gcd) + "-" +to_string(dy / gcd);
+
+                mp[key]++;
             }
 
             for(auto &it : mp){
