@@ -1,3 +1,7 @@
+**********************************************
+Time Complexity : O(N^2)
+Space Complexity : O(N)
+********************************************
 class Solution {
 public:
     string countAndSay(int n) {
@@ -21,5 +25,36 @@ public:
         }
 
         return dp[n];
+    }
+};
+
+
+**********************************************
+Time Complexity : O(N^2)
+Space Complexity : Constant Space 
+********************************************
+
+class Solution {
+public:
+    string countAndSay(int n) {   
+        string prev = "1";
+
+        for(int i = 2; i < n + 1; i++){
+            int count = 1;
+            int len = prev.length();
+            string curr = "";
+            for(int j = 1; j < len; j++){
+                if(prev[j] == prev[j-1]){
+                    count++;
+                }else{
+                    curr += to_string(count) + prev[j-1];
+                    count = 1;
+                }
+            }
+            curr += to_string(count) + prev[len-1]; 
+            prev = curr;
+        }
+
+        return prev;
     }
 };
