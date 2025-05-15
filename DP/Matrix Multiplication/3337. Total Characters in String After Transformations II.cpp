@@ -1,67 +1,78 @@
 class Solution {
 public:
+    int Mod = 1e9 + 7;
     int lengthAfterTransformations(string s, int t, vector<int>& nums) {
-        const int MOD = 1e9 + 7;
-        const int SIZE = 26;
-
-        vector<vector<long long>> T(SIZE, vector<long long>(SIZE, 0));
         
-        for (int i = 0; i < SIZE; ++i) {
-            for (int j = 1; j <= nums[i]; ++j) {
-                T[i][(i + j) % SIZE]++;
+        int n = s.length();
+        vector<long long> fre(26, 0);
+
+
+        //Initial Frequency
+        for(char ch : s) fre[ch - 'a']++;
+
+        
+
+        //Matrix = degree * degree
+
+        vector<vector<long long>> T(26, vector<long long>(26, 0));
+
+        for(int i = 0; i < 26; i++){
+            for(int add = 1; add <= nums[i]; add++){
+                T[(i+add)% 26][i]++;
             }
         }
 
-        vector<vector<long long>> T_exp = matrixPower(T, t, MOD);
+        //Matrix Exponentiation 
 
-        vector<long long> freq(SIZE, 0);
-        for (char c : s) {
-            freq[c - 'a']++;
-        }
+        vector<vector<long long>> result = matrixExpo(T, t);
 
-        long long total = 0;
-        for (int j = 0; j < SIZE; ++j) {
-            long long sum = 0;
-            for (int i = 0; i < SIZE; ++i) {
-                sum = (sum + freq[i] * T_exp[i][j]) % MOD;
+        vector<long long> finalFre(26, 0);
+
+        for(int i = 0; i < 26; i++){
+            for(int j = 0; j < 26; j++){
+                finalFre[j] = (finalFre[j] + (result[i][j] * fre[j]) % Mod) % Mod;
             }
-            total = (total + sum) % MOD;
         }
 
-        return total;
+        long long ans = 0;
+
+        for(int i = 0; i < 26; i++) ans = (ans + finalFre[i]) % Mod;
+
+        return (int)ans;
+
     }
 
-private:
-    // Multipliy
-    vector<vector<long long>> matrixMultiply(vector<vector<long long>>& A, vector<vector<long long>>& B, int MOD) {
-        int SIZE = 26;
-        vector<vector<long long>> result(SIZE, vector<long long>(SIZE, 0));
-        for (int i = 0; i < SIZE; ++i) {
-            for (int k = 0; k < SIZE; ++k) {
-                if (A[i][k] == 0) continue;
-                for (int j = 0; j < SIZE; ++j) {
-                    result[i][j] = (result[i][j] + A[i][k] * B[k][j]) % MOD;
+    vector<vector<long long>> matrixMultiply(vector<vector<long long>> A, vector<vector<long long>> B){
+        vector<vector<long long>> ans(26, vector<long long>(26, 0));
+
+        for(int i = 0; i < 26; i++){
+            for(int j = 0; j < 26; j++){
+                for(int k = 0; k < 26; k++){
+                    ans[i][j] = (ans[i][j] + (A[i][k] * B[k][j]) % Mod) % Mod;
                 }
             }
         }
-        return result;
+
+        return ans;
     }
 
-    //exponentiation
-    vector<vector<long long>> matrixPower(vector<vector<long long>>& mat, int power, int MOD) {
-        int SIZE = 26;
-        vector<vector<long long>> result(SIZE, vector<long long>(SIZE, 0));
-        for (int i = 0; i < SIZE; ++i) {
-            result[i][i] = 1; 
+    vector<vector<long long>> matrixExpo(vector<vector<long long>> T, int t){
+
+        if(t == 0){
+            vector<vector<long long>> I(26, vector<long long>(26, 0));
+            for(int i = 0; i < 26; i++) I[i][i] = 1;
+
+            return I;
         }
 
-        vector<vector<long long>> base = mat;
-        while (power > 0) {
-            if (power % 2 == 1)
-                result = matrixMultiply(result, base, MOD);
-            base = matrixMultiply(base, base, MOD);
-            power /= 2;
+        vector<vector<long long>> half = matrixExpo(T, t/2);
+
+        vector<vector<long long>> full = matrixMultiply(half, half);
+
+        if(t % 2 == 1){
+            full = matrixMultiply(full, T);
         }
-        return result;
+
+        return full;
     }
 };
