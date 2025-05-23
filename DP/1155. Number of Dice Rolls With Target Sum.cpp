@@ -34,3 +34,36 @@ public:
         return ans;
     }
 };
+
+*********************************************************
+Bottom Up Approach 
+********************************************************
+
+  class Solution {
+public:
+    int Mod = 1e9 + 7;
+    
+    int numRollsToTarget(int n, int k, int x) {
+        
+        vector<vector<int>> dp(n+1, vector<int>(x+1, 0));
+        
+        dp[0][0] = 1;
+        
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= x; j++){
+                
+                int ways = 0;
+                
+                for(int face = 1; face <= k; face++){
+                    
+                    if(face <= j)
+                        ways = (ways + dp[i-1][j-face] % Mod) % Mod;
+                }
+                
+                dp[i][j] = ways;
+            }
+        }
+        
+        return dp[n][x];
+    }
+};
