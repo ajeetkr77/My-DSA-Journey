@@ -82,3 +82,46 @@ class Solution {
         return count;
     }
 };
+******************************************************************
+using constant space: 
+******************************************************************
+// C++ program to Count pairs from 
+// two sorted matrices with given sum
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to count pairs from two sorted matrices
+// whose sum is equal to a given value x
+int countPairs(vector<vector<int>>& mat1, 
+               vector<vector<int>>& mat2, int x) {
+    int n = mat1.size();
+  
+    // Indices for pointing current element in mat1 and mat2
+    int i = 0, j = (n*n -1);
+
+    int count = 0;
+
+    // While there are elements in both matrices
+    while (i < n*n && j >= 0) {
+        int r1 = i/n, c1 = i%n;
+        int r2 = j/n, c2 = j%n;
+        int val = mat1[r1][c1] + mat2[r2][c2];
+
+        if (val == x) {
+            count++;
+
+            // Move i and j
+            i++;
+            j--;
+        } 
+        else if (val < x) {
+            i++;
+        } 
+        else {
+            j--; 
+        }
+    }
+
+    return count;
+}
+
