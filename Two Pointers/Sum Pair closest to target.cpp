@@ -58,3 +58,50 @@ class Solution {
         
     }
 };
+
+******************************
+Optimized Approach 
+*******************************
+
+  // User function template for C++
+class Solution {
+  public:
+    vector<int> sumClosest(vector<int>& arr, int target) {
+        // code here
+        int n = arr.size();
+        
+        sort(arr.begin(), arr.end());
+        
+        vector<int> finalAns;
+        
+        int minAbsDiff = INT_MAX;
+        
+        int left = 0, right = n - 1;
+        
+        while(left < right){
+            
+            int sum = arr[left] + arr[right];
+            
+            if(minAbsDiff > abs(sum - target)){
+                
+                minAbsDiff = abs(sum - target);
+                
+                finalAns = {arr[left], arr[right]};
+            }
+            
+            
+            if(sum > target){
+                right--;
+            }
+            
+            else if(sum < target){
+                left++;
+            }
+            else
+                return finalAns;
+        }
+        
+        return finalAns;
+        
+    }
+};
